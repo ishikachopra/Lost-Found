@@ -1,0 +1,31 @@
+# Ignore node_modules in both client and server
+client/node_modules
+server/node_modules
+
+# Ignore environment files
+client/.env
+server/.env
+
+# Ignore logs and cache
+client/.next
+server/.next
+client/.cache
+server/.cache
+
+# Ignore dependency lock files (optional, if you use package-lock.json or yarn.lock)
+client/package-lock.json
+server/package-lock.json
+client/yarn.lock
+server/yarn.lock
+
+# Ignore build artifacts
+client/dist
+server/dist
+client/build
+server/build
+
+# Ignore editor-related files (optional)
+.vscode/
+.idea/
+*.log
+.DS_Store
