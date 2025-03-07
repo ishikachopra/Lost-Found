@@ -7,16 +7,15 @@ const API_URL =
     ? "http://localhost:5100/api/items"
     : "/api/items";
 
-// Enable cookies for cross-origin requests
+
 axios.defaults.withCredentials = true;
 
-// Create the Zustand store
 const useItemStore = create((set) => ({
-  items: [], // State to hold items
+  items: [],
   loading: false, // State to indicate loading status
   error: null, // State to hold any errors
 
-  // Fetch all items from the backend
+  
   fetchItems: async () => {
     set({ loading: true, error: null });
     try {
@@ -28,12 +27,9 @@ const useItemStore = create((set) => ({
     }
   },
 
-  // Add a new item (including image file handling)
-  // Add a new item (including image file handling)
   addItem: async (newItem, imageFile) => {
     set({ loading: true, error: null });
     try {
-      // Create FormData for handling file upload
       const formData = new FormData();
       formData.append("itemName", newItem.itemName);
       formData.append("itemType", newItem.itemType);
@@ -50,10 +46,9 @@ const useItemStore = create((set) => ({
       console.log("Form Data",newItem);
       console.log("Sending FormData:", formData);
 
-      // ✅ Send formData instead of newItem
       const response = await axios.post(API_URL, formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Ensure the request is sent as form-data
+          "Content-Type": "multipart/form-data", 
         },
       });
 
