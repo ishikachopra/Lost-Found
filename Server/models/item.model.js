@@ -48,7 +48,7 @@ const itemSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now, // Automatically set the timestamp
+      default: Date.now, 
     },
     images: {
       type: [String],

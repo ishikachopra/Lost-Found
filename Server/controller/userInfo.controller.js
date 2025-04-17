@@ -1,18 +1,7 @@
 import User from "../models/user.model.js"; // Correct import
 
-// Your controller logic here
-
-// @desc    Get user info
-// @route   GET /api/user-info
-// @access  Private
-// @desc    Get user info
-// @route   GET /api/user-info
-// @access  Private
 import mongoose from "mongoose";
 
-// @desc    Get user info
-// @route   GET /api/user-info
-// @access  Private
 const getUserInfo = async (req, res) => {
   try {
     // Log the decoded userId from the token

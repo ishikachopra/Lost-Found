@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import AOS from "aos"; // Import AOS JavaScript
 import "aos/dist/aos.css"; // Import AOS CSS
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   useEffect(() => {
@@ -41,12 +42,12 @@ const HeroSection = () => {
           data-aos-delay="400"
           className="flex justify-center gap-6"
         >
-          <button className="bg-[#6d28d9] text-white px-8 py-3 text-lg font-semibold rounded-lg hover:bg-[#4c1d95] transition-all shadow-md">
+          <Link to="/reportlostfound" className="bg-[#6d28d9] text-white px-8 py-3 text-lg font-semibold rounded-lg hover:bg-[#4c1d95] transition-all shadow-md">
             Report Lost Item
-          </button>
-          <button className="bg-transparent border-2 border-white text-white px-8 py-3 text-lg font-semibold rounded-lg hover:bg-[#0c4a6e] transition-all shadow-md">
+          </Link>
+          <Link to="/reportlostfound" className="bg-transparent border-2 border-white text-white px-8 py-3 text-lg font-semibold rounded-lg hover:bg-[#0c4a6e] transition-all shadow-md">
             Report Found Item
-          </button>
+          </Link>
         </div>
 
         <div

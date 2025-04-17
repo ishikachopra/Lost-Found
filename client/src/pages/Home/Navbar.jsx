@@ -167,7 +167,7 @@ const Navbar = () => {
       <div className="hidden lg:flex space-x-4 items-center px-2">
         {isAuthenticated ? (
           <Link
-            to="/profile"
+            to="/user-info"
             className="px-4 py-2 bg-[#0e7490] text-white rounded-lg shadow-md hover:bg-[#065f73] transition-all duration-300"
           >
             Profile

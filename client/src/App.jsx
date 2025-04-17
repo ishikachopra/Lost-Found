@@ -27,7 +27,7 @@ const App = () => {
           {/* Protected Route for Reporting Lost/Found */}
           <Route path="/reportlostfound" element={<Report_Lost_Found />} />
 
-          <Route path="/user-info*" element={<UserInfo />} />
+          <Route path="/user-info" element={<UserInfo />} />
           <Route path="/search" element={<Search />} />
 
           <Route path="/AboutUs" element={<AboutUs />} />

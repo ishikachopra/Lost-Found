@@ -1,5 +1,5 @@
 import Item from "../models/item.model.js";
-import User  from "../models/user.model.js";
+
 
 // Get all items (either Lost or Found)
 export const getAllItems = async (req, res) => {
@@ -28,18 +28,17 @@ export const createItem = async (req, res) => {
       return res.status(400).json({ message: "Reporter ID is required" });
     }
 
-    // Ensure status is either "Lost" or "Found"
     if (!["Lost", "Found"].includes(itemType)) {
       return res
         .status(400)
         .json({ message: "Invalid status. Must be 'Lost' or 'Found'" });
     }
 
-    // Handle image upload
+   
     console.log("File received:", req.file);
     const image = req.file ? req.file.path.replace(/\\/g, "/") : null;
 
-    // Initialize item data
+  
     let itemData = {
       itemName,
       itemType,
@@ -48,17 +47,16 @@ export const createItem = async (req, res) => {
       location,
       description,
       status,
-      images: image ? [image] : [], // If there are uploaded images, save their paths
+      images: image ? [image] : [], 
     };
 
-    // Assign either ownerId or founderId based on the status
+   
     if (itemType === "Lost") {
       itemData.ownerId = reporterId; // Reporter is the owner in case of a lost item
     } else if (itemType === "Found") {
       itemData.founderId = reporterId; // Reporter is the founder in case of a found item
     }
 
-    // Create and save the new item
     const newItem = new Item(itemData);
     console.log(newItem);
 
@@ -72,7 +70,7 @@ export const createItem = async (req, res) => {
   }
 };
 
-// Get an item by ID
+
 export const getUserItems = async (req, res) => {
   try {
     const userId = req.userId; // Get the logged-in user's ID from the request
@@ -81,7 +79,7 @@ export const getUserItems = async (req, res) => {
       return res.status(400).json({ message: "User ID is required" });
     }
 
-    // Find items where the user is either the owner (Lost) or the founder (Found)
+
     const items = await Item.find({
       $or: [{ ownerId: userId }, { founderId: userId }],
     })
