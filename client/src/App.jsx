@@ -3,13 +3,16 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Report_Lost_Found from "./pages/Report_lost_found/Report_Lost_Found";
 import Authentication from "./pages/Login_SignUp/Authentication";
-import { ProtectedRoute } from "./pages/Login_SignUp/Authentication";
+// import { ProtectedRoute } from "./pages/Login_SignUp/Authentication";
 import UserInfo from "./pages/UserDashboard.jsx/UserInfo";
 import { Navigate } from "react-router-dom";
 import Search from "./pages/Search/Search";
 import AboutUs from "./AboutUs";
+import Chatpg from "./pages/Message/chatIndex";
 
 const App = () => {
+
+  
   return (
     <Router>
       <div>
@@ -31,6 +34,7 @@ const App = () => {
           <Route path="/search" element={<Search />} />
 
           <Route path="/AboutUs" element={<AboutUs />} />
+          <Route path="/messages/user/:itemId" element={<Chatpg/>}/>
 
           {/* Authentication Component */}
           <Route path="/*" element={<Authentication />} />

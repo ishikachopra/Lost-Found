@@ -1,16 +1,22 @@
 import {create} from "zustand";
+import { io } from "socket.io-client";
+import { useAuthStore } from "./authStore";
+
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
 
 export const userStore = create((set) => ({
   userInfo: null,
   error: null,
   isLoading: false,
+  onlineUsers: [],
+  socket: null,
 
   // Function to fetch user data
   fetchUserInfo: async () => {
     set({ isLoading: true }); // Set loading state to true
 
     try {
-      const response = await fetch("http://localhost:5100/api/user-info", {
+      const response = await fetch(`${BASE_URL}/api/user-info`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -41,4 +47,26 @@ export const userStore = create((set) => ({
       set({ isLoading: false }); // Set loading state to false
     }
   },
+
+  // connectSocket: () => {
+  //   const {user}=useAuthStore();
+  //   if (!user || get().socket?.connected) return;
+
+  //   const socket = io(BASE_URL, {
+  //     query: {
+  //       userId: authUser._id,
+  //     },
+  //   });
+  //   socket.connect();
+
+  //   set({ socket: socket });
+
+  //   socket.on("getOnlineUsers", (userIds) => {
+  //     set({ onlineUsers: userIds });
+  //   });
+  // },
+  // disconnectSocket: () => {
+  //   if (get().socket?.connected) get().socket.disconnect();
+  // },
+
 }));

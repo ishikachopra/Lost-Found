@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import "aos/dist/aos.css";
 import AOS from "aos";
 import { FiX, FiSearch, FiFilter } from "react-icons/fi";
 import { Button } from "../../components/Button";
 import Navbar from "../Home/Navbar";
-import useItemStore from "../../store/itemStore";
+import {useItemStore} from "../../store/itemStore";
+import { useChatStore } from "../../store/chatStore";
 
 const LostFoundTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,7 +16,10 @@ const LostFoundTable = () => {
   const [filterType, setFilterType] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const { items, loading, error, fetchItems } = useItemStore();
+  const { items, loading, error, fetchItems ,claimItem} = useItemStore();
+  const { setSelectedUser } = useChatStore();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     AOS.init({ duration: 500 });
@@ -41,7 +46,18 @@ const LostFoundTable = () => {
   }, [searchQuery, items, filterType, filterStatus]);
 
   const getReporterName = (item) => {
+    console.log("ownner or founder",item.ownerId || item.founderId);
     return item.ownerId?.name || item.founderId?.name || "Unknown";
+  };
+
+  // const getReporterId=(item)={
+  //   return item.owner
+  // }
+
+  const handleClaim = async (itemId,user) => {
+    setSelectedUser(user);
+    await claimItem(itemId);
+    navigate(`/messages/user/${itemId}`); // Redirects to the chat page
   };
 
   return (
@@ -168,7 +184,7 @@ const LostFoundTable = () => {
               <p className="text-gray-400 mb-4">
                 Description: {selectedItem.description}
               </p>
-              <Button className="bg-blue-500">Claim</Button>
+              <Button className="bg-blue-500" onClick={() => { handleClaim(selectedItem._id, selectedItem.ownerId || selectedItem.founderId)}} >Claim</Button>
             </div>
           </motion.div>
         )}

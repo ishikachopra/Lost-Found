@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   FaSignOutAlt,
@@ -19,6 +20,8 @@ const UserDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
   const { logout } = useAuthStore();
+
+  const navigate = useNavigate();
 
   // Fetch user info
   useEffect(() => {
@@ -45,6 +48,10 @@ const UserDashboard = () => {
     } catch (error) {
       console.error("Logout failed:", error); // Handle potential errors
     }
+  };
+
+  const handleClaim = (itemId) => {
+    navigate(`/messages/user/${itemId}`); // Redirects to the chat page
   };
 
   // Fetch item history from the backend
@@ -99,7 +106,6 @@ const UserDashboard = () => {
     }
 
     // Confirm the ID is correct
-
     fetch(`http://localhost:5000/api/items/${itemToUpdate._id}`, {
       method: "PUT",
       headers: {
@@ -295,6 +301,11 @@ const UserDashboard = () => {
                             } py-1 px-3 rounded-full text-xs transition duration-300 ease-in-out`}
                           >
                             {item.status}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 border-b">
+                          <span onClick={() => handleClaim(item._id)}>
+                            Chat
                           </span>
                         </td>
                         <td className="py-3 px-4 border-b flex justify-center">

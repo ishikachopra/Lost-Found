@@ -4,7 +4,9 @@ import {
   getAllItems,
   createItem,
   getUserItems,
-  updateStatus
+  updateStatus,
+  isAdmin,
+  claimItem
 } from "../controller/items.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
@@ -19,5 +21,7 @@ router.post("/",verifyToken, upload.single("image"),createItem); // Add a new it
 router.get("/user-items", verifyToken,getUserItems); // Get item by ID
 // router.delete("/:id", deleteItemById); // Delete item by ID
 router.put("/:id",verifyToken,updateStatus);
+router.get("/admin/:itemId",verifyToken,isAdmin);
+router.post("/claim/:itemId",claimItem)
 
 export default router; // Export the routes

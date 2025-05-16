@@ -1,4 +1,5 @@
 import Item from "../models/item.model.js";
+import mongoose from "mongoose";
 
 
 // Get all items (either Lost or Found)
@@ -180,3 +181,59 @@ export const deleteItemById = async (req, res) => {
       .json({ message: "Error deleting item", error: error.message });
   }
 };
+
+export const isAdmin = async(req,res)=>{
+  const { userId } = req;
+  const {itemId}=req.params;
+ 
+
+  try {
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(itemId) || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid itemId or userId" });
+    }
+
+    // Find the item by ID and match either founderId or ownerId
+    const item = await Item.findOne({
+      _id: itemId,
+      $or: [{ founderId: userId }, { ownerId: userId }],
+    });
+
+    if (item) {
+      return res.status(200).json({ message: "Access granted", item, Access: "true" });
+      
+    }
+    return res.json({ message: "Access denied. Not related to this item.", Access: "false" });
+   
+  } catch (error) {
+    console.error("Error checking item access:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const claimItem= async(req,res)=>{
+  const { itemId } = req.params;
+  const { userId } = req.body; 
+  console.log("user",userId);
+
+  try {
+    const item = await Item.findById(itemId);
+
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    if (item.claimers.includes(userId)) {
+      return res.json({ message: "You have already claimed this item" });
+    }
+
+    item.claimers.push(userId);
+    await item.save();
+
+    return res.status(200).json({ message: "Item claimed successfully", item });
+  } catch (error) {
+    console.error("Error claiming item:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+
+}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Navbar from "../Home/Navbar";
-import useItemStore from "../../store/itemStore"; // Import the Zustand store
+import { useItemStore } from "../../store/itemStore"; // Import the Zustand store
 
 const ReportLostAndFound = () => {
   AOS.init({

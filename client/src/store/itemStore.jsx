@@ -1,5 +1,7 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import axios from "axios";
+import { useAuthStore } from "./authStore";
 
 // Set the API URL based on the environment
 const API_URL =
@@ -10,10 +12,11 @@ const API_URL =
 
 axios.defaults.withCredentials = true;
 
-const useItemStore = create((set) => ({
+export const useItemStore = create(persist((set) => ({
   items: [],
   loading: false, // State to indicate loading status
   error: null, // State to hold any errors
+  access:false,
 
   
   fetchItems: async () => {
@@ -93,6 +96,31 @@ const useItemStore = create((set) => ({
       set({ error: error.message, loading: false });
     }
   },
-}));
 
-export default useItemStore;
+  isAdmin:async(itemId)=>{
+    try{
+      const res=await axios.get(`${API_URL}/admin/${itemId}`);
+      console.log("resoonse",res);
+      if (res.data.Access === 'true') {
+        set({ access: true, error: null });
+      } else {
+        set({ access: false, error: "Access denied" });
+      }
+    }catch(error){
+      set({ access: false, error: error.response?.data?.message || "Something went wrong" });
+    }
+  },
+
+  claimItem: async (itemId)=>{
+    const user = useAuthStore.getState().user;
+    try{
+      const res=axios.post(`${API_URL}/claim/${itemId}`,{
+        userId: user._id,
+      });
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+})));
+

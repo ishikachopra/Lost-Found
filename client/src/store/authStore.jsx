@@ -1,7 +1,10 @@
 import {create} from "zustand"
 import axios from "axios"
+import { io } from "socket.io-client";
 
 const API_URL = import.meta.env.MODE === "development" ? "http://localhost:5100/api/auth" : "/api/auth";
+
+
 
 axios.defaults.withCredentials = true;
 
@@ -11,13 +14,15 @@ const storedAuth = JSON.parse(localStorage.getItem("authState")) || {
 };
 
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set,get) => ({
   user: storedAuth.user,
   isAuthenticated: storedAuth.isAuthenticated,
   error: null,
   isLoading: false,
   isCheckingAuth: true,
   message: null,
+  socket: null,
+  onlineUsers: [],
 
   persistAuthState: (user, isAuthenticated) => {
     localStorage.setItem(
@@ -43,6 +48,7 @@ export const useAuthStore = create((set) => ({
         isLoading: false,
       });
       useAuthStore.getState().persistAuthState(response.data.user, true);
+      get().connectSocket();
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Error signing up";
 
@@ -73,6 +79,7 @@ export const useAuthStore = create((set) => ({
       });
       useAuthStore.getState().persistAuthState(response.data.user, true);
           console.log("User after login:", response.data.user);
+      get().connectSocket();
       
     } catch (error) {
       set({
@@ -96,6 +103,7 @@ export const useAuthStore = create((set) => ({
         isLoading: false,
       });
       localStorage.removeItem("authState");
+      get().disconnectSocket();
     } catch (error) {
       set({ error: "Error logging out", isLoading: false });
       throw error;
@@ -124,6 +132,7 @@ export const useAuthStore = create((set) => ({
 
   checkAuth: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
+    
     set({ isCheckingAuth: true, error: null });
     try {
       const response = await axios.get(`${API_URL}/check-auth`);
@@ -133,6 +142,9 @@ export const useAuthStore = create((set) => ({
         isCheckingAuth: false,
       });
       useAuthStore.getState().persistAuthState(response.data.user, true);
+      get().connectSocket();
+      console.log("socket ", get().socket);
+      
     } catch (error) {
       set({ error: null, isCheckingAuth: false, isAuthenticated: false });
     }
@@ -171,6 +183,28 @@ export const useAuthStore = create((set) => ({
       });
       throw error;
     }
+  },
+
+  connectSocket: () => {
+    const { user } = get();
+    console.log("user connected to socket ",user);
+    if (!user || get().socket?.connected) return;
+
+    const socket = io('http://localhost:5100', {
+      query: {
+        userId: user._id,
+      },
+    });
+    socket.connect();
+
+    set({ socket: socket });
+
+    // socket.on("getOnlineUsers", (userIds) => {
+    //   set({ onlineUsers: userIds });
+    // });
+  },
+  disconnectSocket: () => {
+    if (get().socket?.connected) get().socket.disconnect();
   },
 
 }));

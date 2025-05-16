@@ -10,7 +10,7 @@ const itemSchema = new mongoose.Schema(
     },
     itemType: {
       type: String,
-      enum: ["Lost", "Found"], // Ensures the value is either "Lost" or "Found"
+      enum: ["Lost", "Found"], 
       required: true,
     },
     date: {
@@ -40,6 +40,11 @@ const itemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: false,
+    },
+    claimers:{
+      type: [mongoose.Schema.Types.ObjectId],
+      ref:"User",
+      required:false,
     },
     status: {
       type: String,
