@@ -223,7 +223,7 @@ const UserDashboard = () => {
                   <div className="mt-4">
                     <label
                       htmlFor="profile-image-upload"
-                      className="flex items-center justify-center text-blue-700 bg-blue-500 py-2 px-4 rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 text-white"
+                      className="flex items-center justify-center text-blue-700 bg-blue-500 py-2 px-4 rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 "
                     >
                       <FaCamera className="mr-2" /> Change Profile Picture
                     </label>
